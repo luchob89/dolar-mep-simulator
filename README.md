@@ -3,6 +3,12 @@
 [![CI](https://github.com/luchob89/dolar-MEP-App-for-Latin-Securities/actions/workflows/ci.yml/badge.svg)](https://github.com/luchob89/dolar-MEP-App-for-Latin-Securities/actions/workflows/ci.yml)
 [![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/luchob89/dolar-MEP-App-for-Latin-Securities/blob/main/README.es.md)
 
+## Screenshots
+
+| Home | Buy | Sell |
+| --- | --- | --- |
+| ![Home screen](docs/screenshot-home.png) | ![Buy flow](docs/screenshot-buy.png) | ![Sell flow](docs/screenshot-sell.png) |
+
 ## General Description
 
 This Dollar MEP buy/sell application is a simulation of a financial tool designed to facilitate the purchase and sale of USD using ARS through the AL30 bond. The application allows users to calculate transaction costs, execute buy/sell operations, manage their balances, and view their transaction history. \
@@ -116,3 +122,13 @@ docker run -p 3000:3000 dolar-mep-app
 3. Click the "Buy USD" button to buy USD or the "Sell USD" button to sell USD.
 4. Confirm the transaction in the modal that appears.
 5. View the updated balances and transaction history.
+
+## What I'd change for production
+
+This app was built as a technical test, so a few shortcuts make sense to call out explicitly:
+
+- **Real persistence**: balances and transaction history live only in the Redux store (`lib/userDataSlice.ts`), so they reset on every page reload and aren't shared across devices. A real product needs a database instead.
+- **Authentication**: there's no login or user identity — anyone who opens the app gets the same default balances. Production would need real auth tied to actual accounts.
+- **Audit logging**: transactions are recorded client-side only for display purposes, not persisted or auditable server-side, which a financial tool would need.
+- **Error monitoring**: `app/error.tsx` catches render errors and logs them to the console; a production app would send them to a monitoring service (e.g. Sentry).
+- **Server-side quote validation**: the AL30 quote is fetched client-side from a third-party endpoint (`features/getAL30Data.ts`) with no server-side check before a transaction is confirmed.
